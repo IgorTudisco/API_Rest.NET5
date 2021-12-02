@@ -4,6 +4,7 @@ using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FilmesAPI.Controllers
 {
@@ -15,45 +16,39 @@ namespace FilmesAPI.Controllers
         private static List<Filme> filmes = new List<Filme>();
 
         // Passando um indentidicador
-        public static int id = 1;
+        private static int id = 1;
 
-        [HttpPost] // Indicação de um verbo post
-        // Indicação que os dados vem no corpo da requidição.
-        public void AdicionaFilme([FromBody] Filme filme) 
+        // Indicação de um verbo post
+        [HttpPost]
+        // [FromBody] Indicação que os dados vem no corpo da requidição.
+        // IActionResult Tipo dos estados http.
+        public IActionResult AdicionaFilme([FromBody] Filme filme)
         {
             filme.Id = id++;
             filmes.Add(filme);
-            // Console.WriteLine(filme.Titulo);
-
+            return CreatedAtAction(nameof(RecuperaFilmesPorId), new { Id = filme.Id }, filme);
         }
-
         // Método para trazer os dados.
         [HttpGet]
         /*
          * Passamos um IEnumerable que pelo polimorfizmo é uma lista.
          * Para possamos passar qual quer classe que implemente o IEnumerable.
         */
-        public IEnumerable<Filme> RecuperarFilmes()
+        public IActionResult RecuperaFilmes()
         {
-            return filmes;
+            return Ok(filmes);
         }
 
         // Procurando um filme por Id.
-        [HttpGet("{id}")] // Passando um id como parâmetro
-        public Filme RecuperaFilmePorId(int id)
+        [HttpGet("{id}")]
+        public IActionResult RecuperaFilmesPorId(int id)
         {
-
-            foreach(Filme filme in filmes){
-
-                if(filme.Id == id)
-                {
-                    return filme;
-                }
-
+            Filme filme = filmes.FirstOrDefault(filme => filme.Id == id);
+            if (filme != null)
+            {
+                return Ok(filme);
             }
-
-            return null;
-
+            return NotFound();
         }
 
     }
