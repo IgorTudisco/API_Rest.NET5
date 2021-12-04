@@ -28,7 +28,7 @@ namespace FilmesAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Add o service de conecção com o DB
-            services.AddDbContext<FilmeContext>(opts => opts.UseMySQL(Configuration.GetConnectionString("FilmeConnection")));
+            services.AddDbContext<FilmeContext>(opts => opts.UseMySQL(Configuration.GetConnectionString("FimelConnection")));
             services.AddControllers();
             
         }
