@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace FilmesAPI
 {
@@ -23,6 +24,11 @@ namespace FilmesAPI
             // Add o service de conecção com o DB
             services.AddDbContext<FilmeContext>(opts => opts.UseMySQL(Configuration.GetConnectionString("FimelConnection")));
             services.AddControllers();
+
+            // Add o AutoMapper
+            // Para isso devemos passar alguns parâmetros.
+            // Esses parâmetros é para que ele seja usado direto no assembli.
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
         }
 

@@ -1,5 +1,6 @@
 ﻿
 
+using AutoMapper;
 using FilmesAPI.Data;
 using FilmesAPI.Data.DTOs;
 using FilmesAPI.Models;
@@ -17,10 +18,13 @@ namespace FilmesAPI.Controllers
         // Usando a propriedade contexto, para acessar o DB.
 
         private FilmeContext _context;
+        private IMapper _mapper;
 
-        public FilmeController(FilmeContext filmeContext)
+        public FilmeController(FilmeContext filmeContext, IMapper mapper)
         {
             _context = filmeContext;
+            // Add o AutoMapper
+            _mapper = mapper;
         }
 
         // Indicação de um verbo post
@@ -30,14 +34,9 @@ namespace FilmesAPI.Controllers
         // Passando uma DTO e fazendo a sua converção.
         public IActionResult AdicionaFilme([FromBody] CreateFilmeDTO filmeDTO)
         {
-            // Fazendo a converção.
-            Filme filme = new Filme
-            {
-                Titulo = filmeDTO.Titulo,
-                Genero = filmeDTO.Genero,
-                Duracao = filmeDTO.Duracao,
-                Diretor = filmeDTO.Diretor
-            };
+            // Fazendo a converção usando o Mapper.
+            // De DTO para Filme.
+            Filme filme = _mapper.Map<Filme>(filmeDTO);
 
             // Acessando os dados no DB. Para guardar um dado.
             _context.FilmesDB.Add(filme);
@@ -64,16 +63,8 @@ namespace FilmesAPI.Controllers
             Filme filme = _context.FilmesDB.FirstOrDefault(filme => filme.Id == id);
             if (filme != null)
             {
-                // Passando o filme para a DTO
-                ReadFilmeDTO filmeDTO = new ReadFilmeDTO
-                {
-                    Id = filme.Id,
-                    Titulo = filme.Titulo,
-                    Diretor = filme.Diretor,
-                    Duracao = filme.Duracao,
-                    Genero = filme.Genero,
-                    HoraDaConsulta = DateTime.Now
-                };
+                // Convertendo o filme para ReadFilme
+                ReadFilmeDTO filmeDTO = _mapper.Map<ReadFilmeDTO>(filme);
 
                 return Ok(filmeDTO);
             }
@@ -94,10 +85,9 @@ namespace FilmesAPI.Controllers
                 return BadRequest();
             }
 
-            filme.Titulo = filmeDTO.Titulo;
-            filme.Genero = filmeDTO.Genero;
-            filme.Duracao = filmeDTO.Duracao;
-            filme.Diretor = filmeDTO.Diretor;
+            // Passando os valores de um DTO para o fime.
+            _mapper.Map(filmeDTO, filme);
+
             _context.SaveChanges();
 
             // A boa pratica no Put é não retornar nada.
