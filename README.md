@@ -8,6 +8,6 @@ Curso da Alura: API Rest com .NET 5: Operações essenciais com verbos HTTP
 
 Curso da Alura: .NET 5 e EF Core: relacionando entidades
 
--- Segunda parte concluida.
+-- Segunda parte cursando.
 
- <a href = ""> link certificado - cursando </a>
+ <a href = ""> link certificado</a>
