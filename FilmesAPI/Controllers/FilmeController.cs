@@ -1,121 +1,83 @@
 ﻿
-
 using AutoMapper;
+using FilmesApi.Data;
 using FilmesAPI.Data;
-using FilmesAPI.Data.DTOs;
+using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmesAPI.Controllers
 {
-    [ApiController] // Indicando que essa classe é um controlador.
-    [Route("[controller]")] // Indicando que o meu end point vai ter o mesmo nome da minha class
-    public class FilmeController : ControllerBase // Extendendo a class.
+    [ApiController]
+    [Route("[controller]")]
+    public class FilmeController : ControllerBase
     {
-        // Usando a propriedade contexto, para acessar o DB.
-
-        private FilmeContext _context;
+        private AppDbContext _context;
         private IMapper _mapper;
 
-        public FilmeController(FilmeContext filmeContext, IMapper mapper)
+        public FilmeController(AppDbContext context, IMapper mapper)
         {
-            _context = filmeContext;
-            // Add o AutoMapper
+            _context = context;
             _mapper = mapper;
         }
 
-        // Indicação de um verbo post
+
         [HttpPost]
-        // [FromBody] Indicação que os dados vem no corpo da requidição.
-        // IActionResult Tipo dos estados http.
-        // Passando uma DTO e fazendo a sua converção.
-        public IActionResult AdicionaFilme([FromBody] CreateFilmeDTO filmeDTO)
+        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
-            // Fazendo a converção usando o Mapper.
-            // De DTO para Filme.
-            Filme filme = _mapper.Map<Filme>(filmeDTO);
-
-            // Acessando os dados no DB. Para guardar um dado.
-            _context.FilmesDB.Add(filme);
-
-            // Salvando as alterações no DB.
+            Filme filme = _mapper.Map<Filme>(filmeDto);
+            _context.Filmes.Add(filme);
             _context.SaveChanges();
-
-            // Indicação de retorno do obj. Ele irá retornar o obj criado.
             return CreatedAtAction(nameof(RecuperaFilmesPorId), new { Id = filme.Id }, filme);
         }
 
-        // Método para trazer os dados.
         [HttpGet]
         public IEnumerable<Filme> RecuperaFilmes()
         {
-            return _context.FilmesDB;
+            return _context.Filmes;
         }
 
-        // Procurando um filme por Id.
-        // Colocando uma DTO.
         [HttpGet("{id}")]
         public IActionResult RecuperaFilmesPorId(int id)
         {
-            Filme filme = _context.FilmesDB.FirstOrDefault(filme => filme.Id == id);
+            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme != null)
             {
-                // Convertendo o filme para ReadFilme
-                ReadFilmeDTO filmeDTO = _mapper.Map<ReadFilmeDTO>(filme);
+                ReadFilmeDto filmeDto = _mapper.Map<ReadFilmeDto>(filme);
 
-                return Ok(filmeDTO);
+                return Ok(filmeDto);
             }
             return NotFound();
         }
 
-        // Método de atualização.
-        // Passando um DTO
-        [HttpPost("{id}")]
-        public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDTO filmeDTO)
+        [HttpPut("{id}")]
+        public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
-            // Verificando se existe o filme no DB.
-            Filme filme = _context.FilmesDB.FirstOrDefault(filme => filme.Id == id);
-            
-            // Verificação simples se o filme está nulo.
+            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            // Passando os valores de um DTO para o fime.
-            _mapper.Map(filmeDTO, filme);
-
+            _mapper.Map(filmeDto, filme);
             _context.SaveChanges();
-
-            // A boa pratica no Put é não retornar nada.
             return NoContent();
-
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeletaFilme(int id)
         {
-            // Verificando se existe o filme no DB.
-            Filme filme = _context.FilmesDB.FirstOrDefault(filme => filme.Id == id);
-
-            // Verificação simples se o filme está nulo.
+            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            // Removendo um item no DB.
             _context.Remove(filme);
-
-            // Salvando as alterações.
             _context.SaveChanges();
-
-            // A boa pratica diz que não devemos retornar nada.
             return NoContent();
-
         }
 
     }
