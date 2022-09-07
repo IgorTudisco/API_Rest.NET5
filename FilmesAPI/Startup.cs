@@ -42,8 +42,6 @@ namespace FilmesAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FilmesAPI v1"));
             }
 
             app.UseHttpsRedirection();
@@ -59,3 +57,8 @@ namespace FilmesAPI
         }
     }
 }
+
+/*
+ *  Novidades no EF Core 5.0
+ *  https://docs.microsoft.com/pt-br/ef/core/what-is-new/ef-core-5.0/whatsnew
+ */
