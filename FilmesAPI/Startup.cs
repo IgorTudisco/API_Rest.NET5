@@ -2,20 +2,11 @@ using FilmesApi.Data;
 using FilmesAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace FilmesAPI
 {
@@ -31,9 +22,21 @@ namespace FilmesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(opts => opts.UseMySQL(Configuration.GetConnectionString("CinemaConnection")));
+            // Add o service de conecção com o DB
+            /*
+             *  Passando a propriedade UseLazyLoadingProxies
+             *  para que o sistema espera o carregamento das
+             *  nossas informações.
+             *  
+             */
+            services.AddDbContext<AppDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("FimelConnection")));
             services.AddControllers();
+
+            // Add o AutoMapper
+            // Para isso devemos passar alguns parâmetros.
+            // Esses parâmetros é para que ele seja usado direto no assembli.
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,8 +60,3 @@ namespace FilmesAPI
         }
     }
 }
-
-/*
- *  Novidades no EF Core 5.0
- *  https://docs.microsoft.com/pt-br/ef/core/what-is-new/ef-core-5.0/whatsnew
- */

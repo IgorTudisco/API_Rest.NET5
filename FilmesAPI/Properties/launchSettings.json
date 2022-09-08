@@ -4,8 +4,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:53343",
-      "sslPort": 44380
+      "applicationUrl": "http://localhost:45726",
+      "sslPort": 44368
     }
   },
   "profiles": {
@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "FilmesApi": {
+    "FilmesAPI": {
       "commandName": "Project",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
