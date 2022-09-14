@@ -23,5 +23,9 @@ namespace FilmesAPI.Models
         public virtual Endereco Endereco { get; set; }
         public int EnderecoId { get; set; }
 
+        // Estabelecendo relação de 1:n
+        public virtual Gerente Gerente { get; set; }
+        public int GerenteId { get; set; }
+
     }
 }
