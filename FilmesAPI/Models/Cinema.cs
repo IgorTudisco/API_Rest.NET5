@@ -26,6 +26,8 @@ namespace FilmesAPI.Models
         // Estabelecendo relação de 1:n
         public virtual Gerente Gerente { get; set; }
         public int GerenteId { get; set; }
+        [JsonIgnore]
+        public virtual List<Sessao> Sessoes { get; set; }
 
     }
 }
