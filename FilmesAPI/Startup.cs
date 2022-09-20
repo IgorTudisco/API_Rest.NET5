@@ -1,4 +1,5 @@
 using FilmesApi.Data;
+using FilmesApi.Services;
 using FilmesAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,11 @@ namespace FilmesAPI
             // Para isso devemos passar alguns parâmetros.
             // Esses parâmetros é para que ele seja usado direto no assembli.
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Add o Services
+            // Injetando a dependência.
+            services.AddScoped<FilmeService, FilmeService>();
+            services.AddScoped<CinemaService, CinemaService>();
 
         }
 
