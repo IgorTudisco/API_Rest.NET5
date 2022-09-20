@@ -8,6 +8,6 @@ Curso da Alura: API Rest com .NET 5: Operações essenciais com verbos HTTP
 
 Curso da Alura: .NET 5 e EF Core: relacionando entidades
 
--- Segunda parte cursando.
+-- Segunda parte concluida.
 
- <a href = ""> link certificado</a>
+ <a href = "https://cursos.alura.com.br/certificate/65e8d072-b45f-4c34-9b29-c1c03ac660e3"> link certificado</a>
