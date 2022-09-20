@@ -35,9 +35,40 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Cinema> RecuperaCinemas([FromQuery] string nomeDoFilme)
+        public IActionResult RecuperaCinemas([FromQuery] string nomeDoFilme)
         {
-            return _context.Cinemas;
+            List<Cinema> cinemas = _context.Cinemas.ToList();
+            if (cinemas == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(nomeDoFilme))
+            {
+                /*
+                 * Usando uma alternativa ao Linq.
+                 * Uma boa opção para quando somente
+                 * o Linq não atender os requisitos desejados
+                 * 
+                 * Tipo Genérico IEnumerable.
+                 * 
+                 * Query:
+                 * A partir de Cinema na lista de cinemas, onde o cinema
+                 * tenha qualquer Sessões em que a sessão atenda uma determinada
+                 * condição, seja selecionada. No caso, queremos procurar as Sessões
+                 * dos filmes com o titulo informado.
+                 */
+                IEnumerable<Cinema> query = from cinema in cinemas
+                                            where cinema.Sessoes.Any(sessao =>
+                                            sessao.Filme.Titulo == nomeDoFilme)
+                                            select cinema;
+                cinemas = query.ToList();
+            }
+
+            // Mapeando
+            List<ReadCinemaDto> cinemaDtos = _mapper.Map<List<ReadCinemaDto>>(cinemas);
+
+            return Ok(cinemas);
         }
 
         [HttpGet("{id}")]

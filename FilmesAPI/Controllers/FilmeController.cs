@@ -36,9 +36,36 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Filme> RecuperaFilmes()
+        /* 
+         * Passando um parâmetro que vem de uma query.
+         * Para ter os retornos do Http, temos que usar o IActionResult.
+         * Para corrigir o valor padrão do int que é 0. temos que colocar
+         * ? junto ao int para ele poder assumir também o valor null.
+         */
+        public IActionResult RecuperaFilmes([FromQuery] int? classificacaoEtaria = null)
         {
-            return _context.Filmes;
+            List<Filme> filmes;
+            if (classificacaoEtaria == null)
+            {
+                filmes = _context.Filmes.ToList();
+            }
+            else
+            {
+                // Montando a condição com o Linq e convertendo o resultado para uma lista.
+                filmes = _context.Filmes
+                    .Where(filmes => filmes.ClassificacaoEtaria <= classificacaoEtaria)
+                    .ToList();
+            }
+
+            if (filmes != null)
+            {
+
+                List<ReadFilmeDto> filmeDtos = _mapper.Map<List<ReadFilmeDto>>(filmes);
+                return Ok(filmes);
+            }
+
+            return NotFound();
+
         }
 
         [HttpGet("{id}")]
