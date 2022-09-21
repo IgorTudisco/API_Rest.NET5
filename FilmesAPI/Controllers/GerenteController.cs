@@ -47,6 +47,14 @@ namespace FilmesApi.Controllers
 
         }
 
+        [HttpPut("{id}")]
+        public IActionResult AtualizaGerente(int id, [FromBody] UpdateGerenteDto gerenteDto)
+        {
+            Result resultado = _gerenteService.AtualizaGerente(id, gerenteDto);
+            if (resultado.IsFailed) return NotFound();
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeletaGerente(int id)
         {

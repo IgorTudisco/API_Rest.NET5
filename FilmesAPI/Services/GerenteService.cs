@@ -50,6 +50,18 @@ namespace FilmesApi.Services
             return _mapper.Map<List<ReadGerenteDto>>(gerente);
         }
 
+        internal Result AtualizaGerente(int id, UpdateGerenteDto gerenteDto)
+        {
+            Gerente gerente = _context.Gerentes.FirstOrDefault(gerente => gerente.Id == id);
+            if (gerente == null)
+            {
+                return Result.Fail("Filme não encontrado");
+            }
+            _mapper.Map(gerenteDto, gerente);
+            _context.SaveChanges();
+            return Result.Ok();
+        }
+
         public Result DeletaGerente(int id)
         {
             Gerente gerente = _context.Gerentes.FirstOrDefault(gerente => gerente.Id == id);
@@ -61,5 +73,6 @@ namespace FilmesApi.Services
             _context.SaveChanges();
             return Result.Ok();
         }
+
     }
 }
