@@ -30,6 +30,14 @@ namespace FilmesApi.Controllers
             return CreatedAtAction(nameof(ReculperaGerentePorId), new { id = readDto.Id }, readDto);
         }
 
+        [HttpGet]
+        public IActionResult ReculperaGerente()
+        {
+            List<ReadGerenteDto> readDto = _gerenteService.ReculperaGerente();
+            if (readDto != null) return Ok(readDto);
+            return NotFound();
+        }
+
         [HttpGet("{id}")]
         public IActionResult ReculperaGerentePorId(int id)
         {

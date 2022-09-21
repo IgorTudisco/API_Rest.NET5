@@ -43,6 +43,13 @@ namespace FilmesApi.Services
             return null;
         }
 
+        internal List<ReadGerenteDto> ReculperaGerente()
+        {
+            List<Gerente> gerente = _context.Gerentes.ToList();
+            if (gerente == null) return null;
+            return _mapper.Map<List<ReadGerenteDto>>(gerente);
+        }
+
         public Result DeletaGerente(int id)
         {
             Gerente gerente = _context.Gerentes.FirstOrDefault(gerente => gerente.Id == id);
