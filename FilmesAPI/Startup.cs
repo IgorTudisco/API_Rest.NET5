@@ -40,10 +40,20 @@ namespace FilmesAPI
 
             // Add o Services
             // Injetando a dependência.
-            services.AddScoped<FilmeService, FilmeService>();
             services.AddScoped<CinemaService, CinemaService>();
+            services.AddScoped<EnderecoService, EnderecoService>();
+            services.AddScoped<FilmeService, FilmeService>();
+            services.AddScoped<GerenteService, GerenteService>();
+            services.AddScoped<SessaoService, SessaoService>();
 
         }
+
+        //ReadSessaoDto sessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
+
+        //        return sessaoDto;
+        //    }
+        //    return null;
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

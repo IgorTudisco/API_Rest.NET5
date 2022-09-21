@@ -18,8 +18,7 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-        public FilmeService _filmeService { get; set; }
-        public ReadFilmeDto Result { get; private set; }
+        private FilmeService _filmeService { get; set; }
 
         public FilmeController(FilmeService filmeServices)
         {

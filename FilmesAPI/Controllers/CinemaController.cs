@@ -17,7 +17,7 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class CinemaController : ControllerBase
     {
-        public CinemaService _cinemaService;
+        private CinemaService _cinemaService;
 
         public CinemaController(CinemaService cinemaService)
         {
