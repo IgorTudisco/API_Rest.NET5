@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UsuariosApi.Data;
+using UsuariosApi.Services;
 
 namespace UsuariosApi
 {
@@ -26,12 +30,22 @@ namespace UsuariosApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            /*
+             * Definindo que será usado um banco de dados e um contexto.
+             * Usando
+             */
+            services.AddDbContext<UserDbContext>(options =>
+                options.UseMySQL(Configuration.GetConnectionString("UsuarioConnection"))
+            );
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
+                // Usamos uma Stores para armazenar os nossos dados.
+                .AddEntityFrameworkStores<UserDbContext>();
+            services.AddScoped<CadastroService, CadastroService>();
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "UsuariosApi", Version = "v1" });
-            });
+            // Passando a configuração do AutoMapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,8 +54,6 @@ namespace UsuariosApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "UsuariosApi v1"));
             }
 
             app.UseHttpsRedirection();
@@ -57,3 +69,15 @@ namespace UsuariosApi
         }
     }
 }
+
+/*
+ *  Documentação do Identity
+ *  https://learn.microsoft.com/pt-br/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-5.0#password
+ *  Outra possível configuração para o Identity:
+ *  services.Configure<IdentityOptions>(options =>
+    {
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 8;
+    });
+ */
