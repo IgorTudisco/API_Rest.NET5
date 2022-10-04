@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UsuariosApi.Data.Dtos;
+using UsuariosApi.Data.Requests;
 using UsuariosApi.Models;
 
 namespace UsuariosApi.Services
@@ -28,8 +29,36 @@ namespace UsuariosApi.Services
             // Com o gerenciador de usuários
             // Cadastrando o user
             Task<IdentityResult> resultadoIdentity = _userManager.CreateAsync(usuarioIdentity, createDto.Password);
-            if (resultadoIdentity.Result.Succeeded) return Result.Ok();
+            if (resultadoIdentity.Result.Succeeded)
+            {
+                // Gerando o código de ativação do e-mail
+                var code = _userManager
+                    .GenerateEmailConfirmationTokenAsync(usuarioIdentity)
+                    .Result;
+                return Result.Ok().WithSuccess(code);
+            }
             return Result.Fail("Falha ao cadastrar usuário");
+        }
+
+        // Ativação do e-mail
+        public Result AtivaContaUsuario(AtivaContaRequest request)
+        {
+            // Procurando o usuário
+            var identityUse = _userManager
+                .Users
+                .FirstOrDefault(u => u.Id == request.UsuarioId);
+            /*
+             * Validando o e-mail do usuário passando o identityUse
+             * e o código para o método ConfirmEmailAsync.
+             */
+            var identityResult = _userManager
+                .ConfirmEmailAsync(identityUse, request.CodigoDeAtivacao)
+                .Result;
+            if (identityResult.Succeeded)
+            {
+                return Result.Ok();
+            }
+            return Result.Fail("Falha ao ativar conta de usuário");
         }
     }
 }

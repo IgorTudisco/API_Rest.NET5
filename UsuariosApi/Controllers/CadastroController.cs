@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UsuariosApi.Data.Dtos;
+using UsuariosApi.Data.Requests;
 using UsuariosApi.Services;
 
 namespace UsuariosApi.Controllers
@@ -25,7 +26,16 @@ namespace UsuariosApi.Controllers
         {
             Result resultado = _cadastroServise.CadastraUsuario(createDto);
             if (resultado.IsFailed) return StatusCode(500);
-            return Ok();
+            return Ok(resultado.Successes.FirstOrDefault());
         }
+
+        [HttpPost("/ativa")]
+        public IActionResult AtivaContaUsuario(AtivaContaRequest request)
+        {
+            Result resultado = _cadastroServise.AtivaContaUsuario(request);
+            if (resultado.IsFailed) return StatusCode(500);
+            return Ok(resultado.Successes);
+        }
+
     }
 }

@@ -37,9 +37,14 @@ namespace UsuariosApi
             services.AddDbContext<UserDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("UsuarioConnection"))
             );
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
-                // Usamos uma Stores para armazenar os nossos dados.
-                .AddEntityFrameworkStores<UserDbContext>();
+            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
+                // Pedindo a confimação do e-mail
+                opt => opt.SignIn.RequireConfirmedEmail = true
+                )
+                // Usamos uma Stores para armazenar os nossos dados
+                .AddEntityFrameworkStores<UserDbContext>()
+                // Indicando que virar um código de ativação
+                .AddDefaultTokenProviders();
             services.AddScoped<CadastroService, CadastroService>();
             services.AddScoped<TokenService, TokenService>();
             services.AddScoped<LoginService, LoginService>();
