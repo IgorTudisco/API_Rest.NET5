@@ -41,6 +41,9 @@ namespace UsuariosApi
                 // Usamos uma Stores para armazenar os nossos dados.
                 .AddEntityFrameworkStores<UserDbContext>();
             services.AddScoped<CadastroService, CadastroService>();
+            services.AddScoped<TokenService, TokenService>();
+            services.AddScoped<LoginService, LoginService>();
+            services.AddScoped<LogoutService, LogoutService>();
             services.AddControllers();
             // Passando a configuração do AutoMapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
