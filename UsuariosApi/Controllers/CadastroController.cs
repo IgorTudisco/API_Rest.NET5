@@ -29,8 +29,9 @@ namespace UsuariosApi.Controllers
             return Ok(resultado.Successes.FirstOrDefault());
         }
 
-        [HttpPost("/ativa")]
-        public IActionResult AtivaContaUsuario(AtivaContaRequest request)
+        // Agora vamos receber o código de ativação pela URL
+        [HttpGet("/ativa")]
+        public IActionResult AtivaContaUsuario([FromQuery] AtivaContaRequest request)
         {
             Result resultado = _cadastroServise.AtivaContaUsuario(request);
             if (resultado.IsFailed) return StatusCode(500);

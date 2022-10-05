@@ -45,6 +45,7 @@ namespace UsuariosApi
                 .AddEntityFrameworkStores<UserDbContext>()
                 // Indicando que virar um código de ativação
                 .AddDefaultTokenProviders();
+            services.AddScoped<EmailService, EmailService>();
             services.AddScoped<CadastroService, CadastroService>();
             services.AddScoped<TokenService, TokenService>();
             services.AddScoped<LoginService, LoginService>();
