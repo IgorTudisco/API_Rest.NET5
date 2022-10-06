@@ -17,3 +17,9 @@ Curso da Alura: .NET 5 e Identity: implementando controle de usuário
 -- Terceira parte concluída.
 
  <a href = "https://cursos.alura.com.br/certificate/4f4c2f4b-fd76-4631-b304-37197ddb0cc2"> link certificado</a>
+
+ Curso da Alura: .NET 5 e Identity: autenticando e autorizando usuários
+
+-- Quarta parte em andamento.
+
+ <a href = ""> link certificado</a>
