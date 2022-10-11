@@ -21,6 +21,9 @@ namespace UsuariosApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            // Adicionando o Secrets ao programa
+            .ConfigureAppConfiguration((context, builder) =>
+            builder.AddUserSecrets<Program>());
     }
 }
