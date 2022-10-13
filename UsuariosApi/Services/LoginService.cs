@@ -49,5 +49,59 @@ namespace UsuariosApi.Services
             }
             return Result.Fail("Login falhou");
         }
+
+        public Result SolicitaResetSenhaUser(SolicitaResetRequest request)
+        {
+            // Pesquisando o usuário pelo email
+            IdentityUser<int> identityUser = RecuperaUsuarioPoremail(request.Email);
+
+            if (identityUser != null)
+            {
+                // Montando o nosso codigo
+                string codigoDeRecuperacao = _singInManager
+                    .UserManager
+                    .GeneratePasswordResetTokenAsync(identityUser).Result;
+
+                return Result.Ok().WithSuccess(codigoDeRecuperacao);
+            }
+
+            return Result.Fail("Falha ao solicitar redefinição");
+
+        }
+
+
+        internal Result RestorePassword(MakeRestoreRequest request)
+        {
+            IdentityUser<int> identityUser = RecuperaUsuarioPoremail(request.Email);
+
+            IdentityResult identityResult = _singInManager
+                .UserManager
+                .ResetPasswordAsync(
+                identityUser, request.Token, request.Password)
+                .Result;
+            if (identityResult.Succeeded)
+                return Result
+                    .Ok().WithSuccess("Senha redefinida com sucesso");
+            return Result.Fail("Houve um erro na operação");
+        }
+
+        // Método comumentre as minhas operações.
+        private IdentityUser<int> RecuperaUsuarioPoremail(string email)
+        {
+            return _singInManager
+                            .UserManager
+                            .Users
+                            .FirstOrDefault(u =>
+                            u.NormalizedEmail == email.ToUpper());
+        }
     }
 }
+
+
+/*
+ * Para bloquear tentativas de acesso ao sistema, como ataques de força bruta,
+ * o identity provê uma alternativa para bloquear tentativas suspeitas de
+ * login durante a execução do método de autenticação.
+ * 
+ *  https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-5.0
+ */

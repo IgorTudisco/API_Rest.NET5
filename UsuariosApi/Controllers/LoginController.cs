@@ -34,5 +34,23 @@ namespace UsuariosApi.Controllers
             return Ok(resultado.Successes.FirstOrDefault());
         }
 
+        // Método recupera senha
+        [HttpPost("/solicita-reset")]
+        public IActionResult SolicitaResetSenhaUser(SolicitaResetRequest request)
+        {
+            Result resultado = _loginServe.SolicitaResetSenhaUser(request);
+            if (resultado.IsFailed) return Unauthorized(resultado.Errors);
+            return Ok(resultado.Successes.FirstOrDefault());
+        }
+
+        // Método faz a recuperação da senha
+        [HttpPost("/restore-reset")]
+        public IActionResult RestorePassword(MakeRestoreRequest request)
+        {
+            Result resultado = _loginServe.RestorePassword(request);
+            if (resultado.IsFailed) return Unauthorized(resultado.Errors);
+            return Ok(resultado.Successes.FirstOrDefault());
+        }
+
     }
 }
