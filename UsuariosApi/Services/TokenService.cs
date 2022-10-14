@@ -15,13 +15,14 @@ namespace UsuariosApi.Services
     public class TokenService
     {
         // Criando nosso Token Jwt
-        public Token CreateToken(IdentityUser<int> user)
+        public Token CreateToken(IdentityUser<int> user, string role)
         {
             // Identificando o usuário
             Claim[] direitosUsuario = new Claim[]
             {
                 new Claim("username", user.UserName),
-                new Claim("id", user.Id.ToString()) // Espera uma estring
+                new Claim("id", user.Id.ToString()), // Espera uma estring
+                new Claim(ClaimTypes.Role, role) // Adicionando a role no token
             };
 
             // Regra de armazenagem dos bytes

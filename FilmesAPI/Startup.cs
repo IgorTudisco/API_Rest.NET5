@@ -1,13 +1,16 @@
 using FilmesApi.Data;
 using FilmesApi.Services;
 using FilmesAPI.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Text;
 
 namespace FilmesAPI
 {
@@ -31,6 +34,46 @@ namespace FilmesAPI
              *  
              */
             services.AddDbContext<AppDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("FimelConnection")));
+
+            // Adicionando a autenticação via token
+            services.AddAuthentication(auth =>
+            {
+                // Indicando que a autenticação terá um Jwt
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                // Provando que o Jwt é verdadeiro
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            // Algumas definições da nossa autenticação
+            .AddJwtBearer(token =>
+            {
+                token.RequireHttpsMetadata = false;
+                // Armazenando o token
+                token.SaveToken = true;
+
+                // Os parâmetros que seram validado pelo sistema
+                token.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    /*
+                     * O valor deve ser o mesmo que foi definido no
+                     * TokenService do UsuariosApi (onde o token foi
+                     * gerado)
+                     * 
+                     */
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes("0iatamd090ksdiyg090bhgf090kjloit090wadfrs")),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    /*
+                     * Como o nosso Token tem validade de uma hora,
+                     * ele ao autenticar o token, vai contar apartir do
+                     * zero o tempo de uma hora.
+                     * 
+                     */
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
             services.AddControllers();
 
             // Add o AutoMapper
@@ -66,6 +109,9 @@ namespace FilmesAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // Autenticando o meu token
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

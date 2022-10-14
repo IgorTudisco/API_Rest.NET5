@@ -39,7 +39,11 @@ namespace UsuariosApi.Services
                     usuario.NormalizedUserName == request.Username.ToUpper()
                     );
                 // Gerando o Token
-                Token token = _tokenService.CreateToken(identityUser);
+                // Passando a Role do usuário
+                Token token = _tokenService
+                    .CreateToken(identityUser, _singInManager
+                                 .UserManager.GetRolesAsync(identityUser)
+                                 .Result.FirstOrDefault());
 
                 /*
                  * Passando o meu token para o usuário, dizendo
@@ -85,7 +89,7 @@ namespace UsuariosApi.Services
             return Result.Fail("Houve um erro na operação");
         }
 
-        // Método comumentre as minhas operações.
+        // Método comumente usado pelos outros métodos
         private IdentityUser<int> RecuperaUsuarioPoremail(string email)
         {
             return _singInManager
