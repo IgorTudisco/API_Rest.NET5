@@ -28,6 +28,7 @@ namespace FilmesAPI.Controllers
 
 
         [HttpPost]
+        // Para cadastrar um filme o usuário deve ter essa role de autorização
         [Authorize(Roles = "admin")]
         public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
@@ -43,6 +44,8 @@ namespace FilmesAPI.Controllers
          * Para corrigir o valor padrão do int que é 0. temos que colocar
          * ? junto ao int para ele poder assumir também o valor null.
          */
+        // Para ver os filmes o usuário deve ter essas roles de autorização
+        [Authorize(Roles = "admin, regular")]
         public IActionResult RecuperaFilmes([FromQuery] int? classificacaoEtaria = null)
         {
             List<ReadFilmeDto> readDto = _filmeService.ReculperaFilmes(classificacaoEtaria);

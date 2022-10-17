@@ -40,13 +40,8 @@ namespace UsuariosApi.Services
             // Cadastrando o user
             Task<IdentityResult> resultadoIdentity = _userManager.CreateAsync(usuarioIdentity, createDto.Password);
 
-            // Criando uma Role
-            var createRoleResult = _roleManager
-                .CreateAsync(new IdentityRole<int>("admin")).Result;
-
-            // Adicionando uma Role a um usuário        
-            var userRoleResult = _userManager
-                .AddToRoleAsync(usuarioIdentity, "admin").Result;
+            // Adicionando a Role ao usuário
+            _userManager.AddToRoleAsync(usuarioIdentity, "regular");
 
             if (resultadoIdentity.Result.Succeeded)
             {
