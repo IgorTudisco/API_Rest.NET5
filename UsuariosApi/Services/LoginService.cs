@@ -11,10 +11,10 @@ namespace UsuariosApi.Services
 {
     public class LoginService
     {
-        private SignInManager<IdentityUser<int>> _singInManager;
+        private SignInManager<CustomIdentityUser> _singInManager;
         private TokenService _tokenService;
 
-        public LoginService(SignInManager<IdentityUser<int>> singInManager, TokenService tokenService)
+        public LoginService(SignInManager<CustomIdentityUser> singInManager, TokenService tokenService)
         {
             _singInManager = singInManager;
             _tokenService = tokenService;
@@ -57,7 +57,7 @@ namespace UsuariosApi.Services
         public Result SolicitaResetSenhaUser(SolicitaResetRequest request)
         {
             // Pesquisando o usuário pelo email
-            IdentityUser<int> identityUser = RecuperaUsuarioPoremail(request.Email);
+            CustomIdentityUser identityUser = RecuperaUsuarioPoremail(request.Email);
 
             if (identityUser != null)
             {
@@ -76,7 +76,7 @@ namespace UsuariosApi.Services
 
         internal Result RestorePassword(MakeRestoreRequest request)
         {
-            IdentityUser<int> identityUser = RecuperaUsuarioPoremail(request.Email);
+            CustomIdentityUser identityUser = RecuperaUsuarioPoremail(request.Email);
 
             IdentityResult identityResult = _singInManager
                 .UserManager
@@ -90,7 +90,7 @@ namespace UsuariosApi.Services
         }
 
         // Método comumente usado pelos outros métodos
-        private IdentityUser<int> RecuperaUsuarioPoremail(string email)
+        private CustomIdentityUser RecuperaUsuarioPoremail(string email)
         {
             return _singInManager
                             .UserManager

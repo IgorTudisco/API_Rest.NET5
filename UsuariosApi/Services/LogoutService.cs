@@ -4,14 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UsuariosApi.Models;
 
 namespace UsuariosApi.Services
 {
     public class LogoutService
     {
-        private SignInManager<IdentityUser<int>> _signinManager;
+        private SignInManager<CustomIdentityUser> _signinManager;
 
-        public LogoutService(SignInManager<IdentityUser<int>> signinManager)
+        public LogoutService(SignInManager<CustomIdentityUser> signinManager)
         {
             _signinManager = signinManager;
         }

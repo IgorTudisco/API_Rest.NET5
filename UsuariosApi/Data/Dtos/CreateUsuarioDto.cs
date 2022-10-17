@@ -20,5 +20,7 @@ namespace UsuariosApi.Data.Dtos
         // Indica que esse atributo será comparado com um outro.
         [Compare("Password")]
         public string Repassword { get; set; }
+        [Required]
+        public DateTime DataNascimento { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UsuariosApi.Models;
 
 namespace UsuariosApi.Data
 {
@@ -15,7 +16,7 @@ namespace UsuariosApi.Data
      * passamos uma identificação do tipo inteiro que é gerado pela Role
      * e que ele também vai ter uma chave do tipo inteiro.
      */
-    public class UserDbContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+    public class UserDbContext : IdentityDbContext<CustomIdentityUser, IdentityRole<int>, int>
     {
         // Usando o configuration para usar o arquivo Secrets
         private IConfiguration _configuration;
@@ -35,7 +36,7 @@ namespace UsuariosApi.Data
             base.OnModelCreating(builder);
 
             // Criando usuário fora do fluxo padrão
-            IdentityUser<int> admin = new IdentityUser<int>
+            CustomIdentityUser admin = new CustomIdentityUser
             {
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
@@ -49,7 +50,7 @@ namespace UsuariosApi.Data
             };
 
             // Gerando a senha pelo hash
-            PasswordHasher<IdentityUser<int>> hasher = new PasswordHasher<IdentityUser<int>>();
+            PasswordHasher<CustomIdentityUser> hasher = new PasswordHasher<CustomIdentityUser>();
 
             // Usando o hasher ele vai criptografar nossa senha
             // O GetValue vai trazer a nossa senha do Secrets
@@ -59,7 +60,7 @@ namespace UsuariosApi.Data
             // Para salvar no DB usamos o HasData
 
             // Criando a entidade adm
-            builder.Entity<IdentityUser<int>>().HasData(admin);
+            builder.Entity<CustomIdentityUser>().HasData(admin);
 
             // Criando a role de admin
             builder.Entity<IdentityRole<int>>().HasData(

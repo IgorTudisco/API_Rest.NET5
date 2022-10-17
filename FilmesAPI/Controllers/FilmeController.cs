@@ -45,7 +45,7 @@ namespace FilmesAPI.Controllers
          * ? junto ao int para ele poder assumir também o valor null.
          */
         // Para ver os filmes o usuário deve ter essas roles de autorização
-        [Authorize(Roles = "admin, regular")]
+        [Authorize(Roles = "admin, regular", Policy = "IdadeMinima")]
         public IActionResult RecuperaFilmes([FromQuery] int? classificacaoEtaria = null)
         {
             List<ReadFilmeDto> readDto = _filmeService.ReculperaFilmes(classificacaoEtaria);
